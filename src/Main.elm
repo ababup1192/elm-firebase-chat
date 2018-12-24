@@ -1,12 +1,8 @@
 module Main exposing (Model, Msg(..), init, main, update, view)
 
 import Browser
-import Browser.Navigation as Nav
 import Html exposing (..)
 import Html.Attributes exposing (class, href, placeholder, type_)
-import Html.Events exposing (..)
-import Http exposing (Error(..))
-import Json.Decode as Decode
 
 
 
@@ -100,7 +96,7 @@ main =
         , update = update
         , view =
             \m ->
-                { title = "Elm 0.19 starter"
+                { title = "Elm Firebase Chat"
                 , body = [ view m ]
                 }
         , subscriptions = \_ -> Sub.none
