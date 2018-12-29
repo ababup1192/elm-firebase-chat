@@ -1,4 +1,4 @@
-module Main exposing (Msg(..), chatForm)
+module Main exposing (Comment, Msg(..), chatForm, mediaView)
 
 import Browser
 import Html exposing (..)
@@ -10,6 +10,10 @@ import Html.Events exposing (onInput)
 -- ---------------------------
 -- MODEL
 -- ---------------------------
+
+
+type alias Comment =
+    { name : String, content : String }
 
 
 type alias Model =
@@ -77,6 +81,19 @@ view { content } =
             ]
         , section []
             [ chatForm
+            ]
+        ]
+
+
+mediaView : Comment -> Html Msg
+mediaView comment =
+    div [ class "media" ]
+        [ div [ class "media-left" ]
+            [ a [ href "#", class "icon-rounded" ] [ text "S" ]
+            ]
+        , div [ class "media-body" ]
+            [ h4 [ class "media-heading" ] [ text " Date:2018/12/29" ]
+            , div [] [ text "" ]
             ]
         ]
 
