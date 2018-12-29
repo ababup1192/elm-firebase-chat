@@ -83,7 +83,7 @@ chatForm : Html Msg
 chatForm =
     form [ class "chart-form pure-form" ]
         [ div [ class "input-group" ]
-            [ input [ type_ "text", class "", placeholder "Comment" ] []
+            [ input [ type_ "text", class "", placeholder "Comment", onInput UpdateComment ] []
             , button [ class "pure-button button-secondary" ] [ text "SNED" ]
             ]
         ]
