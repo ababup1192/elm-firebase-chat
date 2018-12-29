@@ -13,12 +13,12 @@ import Html.Events exposing (onInput)
 
 
 type alias Model =
-    {}
+    { comment : String }
 
 
 init : () -> ( Model, Cmd Msg )
 init _ =
-    ( {}, Cmd.none )
+    ( { comment = "" }, Cmd.none )
 
 
 
@@ -33,7 +33,9 @@ type Msg
 
 update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
-    ( model, Cmd.none )
+    case msg of
+        UpdateComment cmnt ->
+            ( { model | comment = cmnt }, Cmd.none )
 
 
 
@@ -43,7 +45,7 @@ update msg model =
 
 
 view : Model -> Html Msg
-view model =
+view { comment } =
     div [ class "page" ]
         [ section [ class "card" ]
             [ div [ class "card-header" ]
@@ -64,7 +66,7 @@ view model =
                     [ class "media" ]
                     [ div [ class "media-body" ]
                         [ h4 [ class "media-heading" ] [ text "Tanaka Jiro Date:2016/09/01" ]
-                        , div [] [ text "この文章はダミーです。文字の大きさ、量、字間、行間等を確認するために入れています。" ]
+                        , div [] [ text comment ]
                         ]
                     , div
                         [ class "media-right" ]
