@@ -13,12 +13,12 @@ import Html.Events exposing (onInput)
 
 
 type alias Model =
-    { comment : String }
+    { content : String }
 
 
 init : () -> ( Model, Cmd Msg )
 init _ =
-    ( { comment = "" }, Cmd.none )
+    ( { content = "" }, Cmd.none )
 
 
 
@@ -28,14 +28,14 @@ init _ =
 
 
 type Msg
-    = UpdateComment String
+    = UpdateContent String
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
     case msg of
-        UpdateComment cmnt ->
-            ( { model | comment = cmnt }, Cmd.none )
+        UpdateContent c ->
+            ( { model | content = c }, Cmd.none )
 
 
 
@@ -45,7 +45,7 @@ update msg model =
 
 
 view : Model -> Html Msg
-view { comment } =
+view { content } =
     div [ class "page" ]
         [ section [ class "card" ]
             [ div [ class "card-header" ]
@@ -66,7 +66,7 @@ view { comment } =
                     [ class "media" ]
                     [ div [ class "media-body" ]
                         [ h4 [ class "media-heading" ] [ text "Tanaka Jiro Date:2016/09/01" ]
-                        , div [] [ text comment ]
+                        , div [] [ text content ]
                         ]
                     , div
                         [ class "media-right" ]
@@ -85,7 +85,7 @@ chatForm : Html Msg
 chatForm =
     form [ class "chart-form pure-form" ]
         [ div [ class "input-group" ]
-            [ input [ type_ "text", class "", placeholder "Comment", onInput UpdateComment ] []
+            [ input [ type_ "text", class "", placeholder "Comment", onInput UpdateContent ] []
             , button [ class "pure-button button-secondary" ] [ text "SNED" ]
             ]
         ]
