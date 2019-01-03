@@ -28,7 +28,7 @@ suite =
         [ describe "chatForm"
             [ test "フォームに 'abc' と入力したら UpdateContent 'abc' の Msgが発行される" <|
                 \_ ->
-                    chatForm
+                    chatForm ""
                         |> Query.fromHtml
                         |> Query.find [ Selector.tag "input" ]
                         |> Event.simulate (Event.input "abc")
