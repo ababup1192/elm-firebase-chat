@@ -62,6 +62,12 @@ suite =
                         |> Query.find [ Selector.class "media-body" ]
                         |> Query.find [ Selector.tag "div" ]
                         |> Query.has [ Selector.text "田中のコメントです。" ]
+            , test "Tanakaのコメントのアイコンの頭文字は「T」である。。" <|
+                \_ ->
+                    meComment
+                        |> Query.fromHtml
+                        |> Query.find [ Selector.class "icon-rounded" ]
+                        |> Query.has [ Selector.text "T" ]
             ]
         , describe "nameInitial" <|
             let
