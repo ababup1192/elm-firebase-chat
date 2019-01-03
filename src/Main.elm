@@ -83,7 +83,7 @@ view { content, comments } =
                 [ text "Elm Chat"
                 ]
             , div [ class "card-body" ] <|
-                List.map mediaView comments
+                List.map (mediaView tanaka) comments
                     ++ [ hr [] []
                        , div
                             [ class "media" ]
@@ -104,8 +104,8 @@ view { content, comments } =
         ]
 
 
-mediaView : Comment -> Html Msg
-mediaView { user, content } =
+mediaView : User -> Comment -> Html Msg
+mediaView me { user, content } =
     div [ class "media" ]
         [ div [ class "media-left" ]
             [ a [ href "#", class "icon-rounded" ] [ text "S" ]

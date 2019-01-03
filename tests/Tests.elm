@@ -36,23 +36,32 @@ suite =
             ]
         , describe "mediaView" <|
             let
-                suzukiComment =
-                    mediaView (Comment (User 2 "Suzuki Taro") "コメントです。")
+                tanaka =
+                    User 1 "Tanaka Jiro"
+
+                suzuki =
+                    User 2 "Suzuki Taro"
+
+                meComment =
+                    mediaView tanaka (Comment tanaka "田中のコメントです。")
+
+                otherComment =
+                    mediaView tanaka (Comment suzuki "鈴木のコメントです。")
             in
             [ test "コメントしたのは、「Suzuki Taro」だ。" <|
                 \_ ->
-                    suzukiComment
+                    meComment
                         |> Query.fromHtml
                         |> Query.find [ Selector.class "media-body" ]
                         |> Query.find [ Selector.tag "h4" ]
-                        |> Query.has [ Selector.text "Suzuki Taro Date:2018/12/29" ]
+                        |> Query.has [ Selector.text "Tanaka Jiro Date:2018/12/29" ]
             , test "コメント内容は、「コメントです。」だ。" <|
                 \_ ->
-                    suzukiComment
+                    meComment
                         |> Query.fromHtml
                         |> Query.find [ Selector.class "media-body" ]
                         |> Query.find [ Selector.tag "div" ]
-                        |> Query.has [ Selector.text "コメントです。" ]
+                        |> Query.has [ Selector.text "田中のコメントです。" ]
             ]
         , describe "nameInitial" <|
             let
