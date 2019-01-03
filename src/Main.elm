@@ -106,15 +106,29 @@ view { content, comments } =
 
 mediaView : User -> Comment -> Html Msg
 mediaView me { user, content } =
-    div [ class "media" ]
-        [ div [ class "media-body media-part" ]
-            [ h4 [ class "media-heading" ] [ text <| user.name ++ " Date:2018/12/29" ]
-            , div [] [ text content ]
-            ]
-        , div [ class "media-right media-part" ]
-            [ a [ href "#", class "icon-rounded" ] [ text <| nameInitial user ]
-            ]
-        ]
+    let
+        mediaChildren =
+            if user == me then
+                [ div [ class "media-body media-part" ]
+                    [ h4 [ class "media-heading" ] [ text <| user.name ++ " Date:2018/12/29" ]
+                    , div [] [ text content ]
+                    ]
+                , div [ class "media-right media-part" ]
+                    [ a [ href "#", class "icon-rounded" ] [ text <| nameInitial user ]
+                    ]
+                ]
+
+            else
+                [ div [ class "media-left media-part" ]
+                    [ a [ href "#", class "icon-rounded" ] [ text <| nameInitial user ]
+                    ]
+                , div [ class "media-body media-part" ]
+                    [ h4 [ class "media-heading" ] [ text <| user.name ++ " Date:2018/12/29" ]
+                    , div [] [ text content ]
+                    ]
+                ]
+    in
+    div [ class "media" ] mediaChildren
 
 
 chatForm : Html Msg
