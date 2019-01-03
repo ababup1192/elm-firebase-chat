@@ -18,7 +18,7 @@ type alias User =
 
 nameInitial : User -> String
 nameInitial { name } =
-    ""
+    String.slice 0 1 name
 
 
 type alias Comment =

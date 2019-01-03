@@ -58,5 +58,15 @@ suite =
                             "T"
                     in
                     Expect.equal expect actual
+            , test "Suzuki Taroのイニシャルは「S」だ。" <|
+                \_ ->
+                    let
+                        actual =
+                            nameInitial suzuki
+
+                        expect =
+                            "S"
+                    in
+                    Expect.equal expect actual
             ]
         ]
