@@ -1,4 +1,4 @@
-module Main exposing (Comment, Msg(..), chatForm, mediaView)
+module Main exposing (Comment, Msg(..), User, chatForm, mediaView)
 
 import Browser
 import Html exposing (..)
@@ -12,21 +12,40 @@ import Html.Events exposing (onInput)
 -- ---------------------------
 
 
+type alias User =
+    { uid : Int, name : String }
+
+
+nameInitial : User -> String
+nameInitial { name } =
+    ""
+
+
 type alias Comment =
-    { name : String, content : String }
+    { user : User, content : String }
 
 
 type alias Model =
     { content : String, comments : List Comment }
 
 
+tanaka =
+    User 1 "Tanaka Jiro"
+
+
+suzuki =
+    User 2 "Suzuki Taro"
+
+
 init : () -> ( Model, Cmd Msg )
 init _ =
     ( { content = ""
       , comments =
-            [ Comment "Suzuki Taro" "1つ目のコメントです。"
-            , Comment "Suzuki Taro" "2つ目のコメントです。"
-            , Comment "Suzuki Taro" "3つ目のコメントです。"
+            [ Comment suzuki "Suzukiの1つ目のコメントです。"
+            , Comment suzuki "Suzukiの2つ目のコメントです。"
+            , Comment tanaka "Tanakaの1つ目のコメントです。"
+            , Comment suzuki "Suzukiの3つ目のコメントです。"
+            , Comment tanaka "Tanakaの2つ目のコメントです。"
             ]
       }
     , Cmd.none
@@ -86,13 +105,13 @@ view { content, comments } =
 
 
 mediaView : Comment -> Html Msg
-mediaView { name, content } =
+mediaView { user, content } =
     div [ class "media" ]
         [ div [ class "media-left" ]
             [ a [ href "#", class "icon-rounded" ] [ text "S" ]
             ]
         , div [ class "media-body" ]
-            [ h4 [ class "media-heading" ] [ text <| name ++ " Date:2018/12/29" ]
+            [ h4 [ class "media-heading" ] [ text <| user.name ++ " Date:2018/12/29" ]
             , div [] [ text content ]
             ]
         ]

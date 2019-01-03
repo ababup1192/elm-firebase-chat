@@ -23,7 +23,7 @@ suite =
         , describe "mediaView" <|
             let
                 suzukiComment =
-                    mediaView (Comment "Suzuki Taro" "コメントです。")
+                    mediaView (Comment (User 2 "Suzuki Taro") "コメントです。")
             in
             [ test "コメントしたのは、「Suzuki Taro」だ。" <|
                 \_ ->
