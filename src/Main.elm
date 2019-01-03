@@ -1,4 +1,4 @@
-module Main exposing (Comment, Msg(..), User, chatForm, mediaView)
+module Main exposing (Comment, Msg(..), User, chatForm, mediaView, nameInitial)
 
 import Browser
 import Html exposing (..)

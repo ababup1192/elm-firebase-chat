@@ -40,4 +40,23 @@ suite =
                         |> Query.find [ Selector.tag "div" ]
                         |> Query.has [ Selector.text "コメントです。" ]
             ]
+        , describe "nameInitial" <|
+            let
+                tanaka =
+                    User 1 "Tanaka Jiro"
+
+                suzuki =
+                    User 2 "Suzuki Taro"
+            in
+            [ test "Tanaka Jiroのイニシャルは「T」だ。" <|
+                \_ ->
+                    let
+                        actual =
+                            nameInitial tanaka
+
+                        expect =
+                            "T"
+                    in
+                    Expect.equal expect actual
+            ]
         ]
