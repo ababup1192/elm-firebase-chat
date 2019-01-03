@@ -83,22 +83,9 @@ view { content, comments } =
                 [ text "Elm Chat"
                 ]
             , div [ class "card-body" ] <|
-                List.map (mediaView tanaka) comments
-                    ++ [ hr [] []
-                       , div
-                            [ class "media" ]
-                            [ div [ class "media-body" ]
-                                [ h4 [ class "media-heading" ] [ text "Tanaka Jiro Date:2016/09/01" ]
-                                , div [] [ text content ]
-                                ]
-                            , div
-                                [ class "media-right" ]
-                                [ a [ href "#", class "icon-rounded" ] [ text "T" ]
-                                ]
-                            ]
-                       ]
+                (comments |> List.map (mediaView tanaka) |> List.intersperse (hr [] []))
             ]
-        , section []
+        , section [ class "page-footer" ]
             [ chatForm
             ]
         ]
@@ -107,12 +94,15 @@ view { content, comments } =
 mediaView : User -> Comment -> Html Msg
 mediaView me { user, content } =
     let
+        mediaBody =
+            div [ class "media-body media-part" ]
+                [ h4 [ class "media-heading" ] [ text <| user.name ++ " Date:2018/12/29" ]
+                , div [] [ text content ]
+                ]
+
         mediaChildren =
             if user == me then
-                [ div [ class "media-body media-part" ]
-                    [ h4 [ class "media-heading" ] [ text <| user.name ++ " Date:2018/12/29" ]
-                    , div [] [ text content ]
-                    ]
+                [ mediaBody
                 , div [ class "media-right media-part" ]
                     [ a [ href "#", class "icon-rounded" ] [ text <| nameInitial user ]
                     ]
@@ -122,10 +112,7 @@ mediaView me { user, content } =
                 [ div [ class "media-left media-part" ]
                     [ a [ href "#", class "icon-rounded" ] [ text <| nameInitial user ]
                     ]
-                , div [ class "media-body media-part" ]
-                    [ h4 [ class "media-heading" ] [ text <| user.name ++ " Date:2018/12/29" ]
-                    , div [] [ text content ]
-                    ]
+                , mediaBody
                 ]
     in
     div [ class "media" ] mediaChildren
