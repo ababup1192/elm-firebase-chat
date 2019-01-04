@@ -1,4 +1,13 @@
-module Main exposing (Comment, Msg(..), User, chatForm, mediaView, nameInitial)
+module Main exposing
+    ( Comment
+    , Model
+    , Msg(..)
+    , User
+    , chatForm
+    , mediaView
+    , nameInitial
+    , updateSendContent
+    )
 
 import Browser
 import Html exposing (..)
@@ -71,16 +80,19 @@ update msg ({ me, content, comments } as model) =
             ( { model | content = c }, Cmd.none )
 
         SendContent ->
-            if String.isEmpty (String.trim content) then
-                ( model, Cmd.none )
+            ( updateSendContent model, Cmd.none )
 
-            else
-                ( { model
-                    | comments = Comment me content :: comments
-                    , content = ""
-                  }
-                , Cmd.none
-                )
+
+updateSendContent : Model -> Model
+updateSendContent ({ me, content, comments } as model) =
+    if String.isEmpty (String.trim content) then
+        model
+
+    else
+        { model
+            | comments = Comment me content :: comments
+            , content = ""
+        }
 
 
 

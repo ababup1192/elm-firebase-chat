@@ -33,6 +33,13 @@ suite =
                         |> Query.find [ Selector.tag "input" ]
                         |> Event.simulate (Event.input "abc")
                         |> Event.expect (UpdateContent "abc")
+            , test "SENDボタンを押したら、SendContent Msgが発行される" <|
+                \_ ->
+                    chatForm ""
+                        |> Query.fromHtml
+                        |> Query.find [ Selector.tag "button" ]
+                        |> Event.simulate Event.click
+                        |> Event.expect SendContent
             ]
         , describe "mediaView" <|
             let
@@ -93,5 +100,42 @@ suite =
             in
             [ nameInitialTest tanaka "T"
             , nameInitialTest suzuki "S"
+            ]
+        , describe "updateSendContent" <|
+            let
+                tanaka =
+                    User 1 "Tanaka Jiro"
+
+                suzuki =
+                    User 2 "Suzuki Taro"
+            in
+            [ test "打たれている内容が空の場合、コメント反映はされない。" <|
+                \_ ->
+                    let
+                        actual =
+                            updateSendContent <| Model tanaka "" []
+
+                        expect =
+                            Model tanaka "" []
+                    in
+                    Expect.equal expect actual
+            , test "打たれている内容が空ではない場合、コメントはリストの先頭に追加され、内容は空になる。" <|
+                \_ ->
+                    let
+                        actual =
+                            updateSendContent <|
+                                Model tanaka
+                                    "second"
+                                    [ Comment suzuki "first"
+                                    ]
+
+                        expect =
+                            Model tanaka
+                                ""
+                                [ Comment tanaka "second"
+                                , Comment suzuki "first"
+                                ]
+                    in
+                    Expect.equal expect actual
             ]
         ]
