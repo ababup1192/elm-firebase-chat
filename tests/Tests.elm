@@ -140,14 +140,14 @@ suite =
                     Expect.equal expect actual
             ]
         , describe "toDate" <|
-            [ test "Posixから Jun 1,2018,00:00:00" <|
+            [ test "Posixから Jan 1,2019,00:00:00" <|
                 \_ ->
                     let
                         actual =
-                            toDate utc (Time.millisToPosix 154626840000)
+                            toDate utc (Time.millisToPosix 1546300800000)
 
                         expect =
-                            "Jun 1,2018,00:00:00"
+                            "Jan 1,2019,00:00:00"
                     in
                     Expect.equal expect actual
             ]
