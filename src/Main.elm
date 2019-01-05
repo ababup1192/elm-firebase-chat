@@ -14,7 +14,8 @@ import Browser
 import Html exposing (..)
 import Html.Attributes exposing (class, href, placeholder, type_, value)
 import Html.Events exposing (onClick, onInput)
-import Time exposing (Month(..), Posix, Zone)
+import Task
+import Time exposing (Month(..), Posix, Weekday(..), Zone)
 
 
 
@@ -33,11 +34,15 @@ nameInitial { name } =
 
 
 type alias Comment =
-    { user : User, content : String }
+    { user : User, content : String, postTime : Posix }
 
 
 type alias Model =
-    { me : User, content : String, comments : List Comment }
+    { me : User
+    , content : String
+    , comments : List Comment
+    , zone : Zone
+    }
 
 
 tanaka =
@@ -53,12 +58,10 @@ init _ =
     ( { me = tanaka
       , content = ""
       , comments =
-            [ Comment tanaka "Tanakaの2つ目のコメントです。"
-            , Comment suzuki "Suzukiの3つ目のコメントです。"
-            , Comment tanaka "Tanakaの1つ目のコメントです。"
-            , Comment suzuki "Suzukiの2つ目のコメントです。"
-            , Comment suzuki "Suzukiの1つ目のコメントです。"
+            [ Comment suzuki "新年明けましておめでとうございます。" (Time.millisToPosix 1546300800000)
             ]
+      , zone =
+            Time.utc
       }
     , Cmd.none
     )
@@ -73,6 +76,7 @@ init _ =
 type Msg
     = UpdateContent String
     | SendContent
+    | AddComment Posix
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
@@ -82,17 +86,20 @@ update msg ({ me, content, comments } as model) =
             ( { model | content = c }, Cmd.none )
 
         SendContent ->
-            ( updateSendContent model, Cmd.none )
+            ( model, Cmd.batch [ Task.perform AddComment Time.now ] )
+
+        AddComment postTime ->
+            ( updateSendContent postTime model, Cmd.none )
 
 
-updateSendContent : Model -> Model
-updateSendContent ({ me, content, comments } as model) =
+updateSendContent : Posix -> Model -> Model
+updateSendContent postTime ({ me, content, comments } as model) =
     if String.isEmpty (String.trim content) then
         model
 
     else
         { model
-            | comments = Comment me content :: comments
+            | comments = Comment me content postTime :: comments
             , content = ""
         }
 
@@ -104,14 +111,14 @@ updateSendContent ({ me, content, comments } as model) =
 
 
 view : Model -> Html Msg
-view { me, content, comments } =
+view { me, content, comments, zone } =
     div [ class "page" ]
         [ section [ class "card" ]
             [ div [ class "card-header" ]
                 [ text "Elm Chat"
                 ]
             , div [ class "card-body" ] <|
-                (comments |> List.reverse |> List.map (mediaView me) |> List.intersperse (hr [] []))
+                (comments |> List.reverse |> List.map (mediaView me zone) |> List.intersperse (hr [] []))
             ]
         , section [ class "page-footer" ]
             [ chatForm content
@@ -119,12 +126,12 @@ view { me, content, comments } =
         ]
 
 
-mediaView : User -> Comment -> Html Msg
-mediaView me { user, content } =
+mediaView : User -> Zone -> Comment -> Html Msg
+mediaView me zone { user, content, postTime } =
     let
         mediaBody =
             div [ class "media-body media-part" ]
-                [ h4 [ class "media-heading" ] [ text <| user.name ++ " Date:2018/12/29" ]
+                [ h4 [ class "media-heading" ] [ text <| user.name ++ " Date: " ++ toDate zone postTime ]
                 , div [] [ text content ]
                 ]
 
@@ -189,7 +196,7 @@ toDate zone time =
             String.padLeft 2 '0'
 
         month =
-            Time.toMonth zone time |> omissionMonth
+            Time.toMonth zone time |> toMonthNumber
 
         day =
             Time.toDay zone time |> String.fromInt
@@ -203,47 +210,72 @@ toDate zone time =
         minutes =
             Time.toMinute zone time |> String.fromInt |> padZero2
 
-        seconds =
-            Time.toSecond zone time |> String.fromInt |> padZero2
+        week =
+            Time.toWeekday zone time |> toJapaneseWeekday
     in
-    month ++ " " ++ day ++ "," ++ year ++ "," ++ hour ++ ":" ++ minutes ++ ":" ++ seconds
+    year ++ "年" ++ month ++ "月" ++ day ++ "日 " ++ hour ++ ":" ++ minutes ++ " " ++ week ++ "曜日"
 
 
-omissionMonth : Time.Month -> String
-omissionMonth month =
+toMonthNumber : Time.Month -> String
+toMonthNumber month =
     case month of
         Jan ->
-            "Jan"
+            "1"
 
         Feb ->
-            "Feb"
+            "2"
 
         Mar ->
-            "Mar"
+            "3"
 
         Apr ->
-            "Apr"
+            "4"
 
         May ->
-            "May"
+            "5"
 
         Jun ->
-            "Jun"
+            "6"
 
         Jul ->
-            "Jul"
+            "7"
 
         Aug ->
-            "Aug"
+            "8"
 
         Sep ->
-            "Sep"
+            "9"
 
         Oct ->
-            "Oct"
+            "10"
 
         Nov ->
-            "Nov"
+            "11"
 
         Dec ->
-            "Dec"
+            "12"
+
+
+toJapaneseWeekday : Weekday -> String
+toJapaneseWeekday weekday =
+    case weekday of
+        Mon ->
+            "月"
+
+        Tue ->
+            "火"
+
+        Wed ->
+            "水"
+
+        Thu ->
+            "木"
+
+        Fri ->
+            "金"
+
+        Sat ->
+            "土"
+
+        Sun ->
+            "日"
