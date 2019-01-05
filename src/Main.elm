@@ -6,6 +6,7 @@ module Main exposing
     , chatForm
     , mediaView
     , nameInitial
+    , toDate
     , updateSendContent
     )
 
@@ -13,6 +14,7 @@ import Browser
 import Html exposing (..)
 import Html.Attributes exposing (class, href, placeholder, type_, value)
 import Html.Events exposing (onClick, onInput)
+import Time exposing (Posix, Zone)
 
 
 
@@ -172,3 +174,14 @@ main =
                 }
         , subscriptions = \_ -> Sub.none
         }
+
+
+
+-- ---------------------------
+-- TIME Util
+-- ---------------------------
+
+
+toDate : Zone -> Posix -> String
+toDate zone time =
+    ""
